@@ -635,12 +635,13 @@ static int ads1x4s0x_channel_setup(const struct device *dev,
 	ADS1X4S0X_REGISTER_IDACMAG_SET_DEFAULTS(idac_magnitude);
 	ADS1X4S0X_REGISTER_IDACMUX_SET_DEFAULTS(idac_mux);
 
-	if (channel_cfg->channel_id != 0) {
-		LOG_ERR("%s: only one channel is supported", dev->name);
-		return -EINVAL;
-	}
+	/* TODO: Valida that the channel id is in the range for the specific device*/
+	// if (channel_cfg->channel_id != 0) {
+	// 	LOG_ERR("%s: only one channel is supported", dev->name);
+	// 	return -EINVAL;
+	// }
 
-	/* The ADS114 uses samples per seconds units with the lowest being 2.5SPS
+	/* The ADS1X4S0X uses samples per seconds units with the lowest being 2.5SPS
 	 * and with acquisition_time only having 14b for time, this will not fit
 	 * within here for microsecond units. Use Tick units and allow the user to
 	 * specify the ODR directly.
@@ -915,10 +916,11 @@ static int ads1x4s0x_validate_sequence(const struct device *dev,
 		return -EINVAL;
 	}
 
-	if (sequence->channels != BIT(0)) {
-		LOG_ERR("%s: invalid channel", dev->name);
-		return -EINVAL;
-	}
+	/* TODO: Validate that the channel is in the range for the specific device and only one channel at a time */
+	// if (sequence->channels != BIT(0)) {
+	// 	LOG_ERR("%s: invalid channel", dev->name);
+	// 	return -EINVAL;
+	// }
 
 	if (sequence->oversampling) {
 		LOG_ERR("%s: oversampling is not supported", dev->name);
@@ -1507,7 +1509,7 @@ static int ads1x4s0x_init(const struct device *dev)
 	}
 
 	if (ADS1X4S0X_REGISTER_STATUS_NOT_RDY_GET(status) == 0x01) {
-		LOG_ERR("%s: ADS114 is not yet ready", dev->name);
+		LOG_ERR("%s: ADS1X4S0X is not yet ready", dev->name);
 		return -EBUSY;
 	}
 
